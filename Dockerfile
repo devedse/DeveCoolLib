@@ -14,10 +14,3 @@ RUN dotnet restore
 COPY . .
 RUN dotnet build --configuration Release
 RUN dotnet test --configuration Release ./DeveCoolLib.Tests/DeveCoolLib.Tests.csproj
-RUN dotnet publish ./DeveCoolLib.ConsoleApp/DeveCoolLib.ConsoleApp.csproj --output /app/ --configuration Release
-
-# Stage 2
-FROM mcr.microsoft.com/dotnet/core/runtime:2.2-alpine3.9
-WORKDIR /app
-COPY --from=builder /app .
-ENTRYPOINT ["dotnet", "DeveCoolLib.ConsoleApp.dll"]
