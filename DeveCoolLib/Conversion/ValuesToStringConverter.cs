@@ -35,5 +35,24 @@ namespace DeveCoolLib.Conversion
             var theNumber = Math.Sign(seconds) * num;
             return $"{theNumber} {suf[place]}{(num == 1 ? "" : "s")}";
         }
+
+        public static string MiliSecondsToString(long miliSeconds)
+        {
+            if (miliSeconds < 1000)
+            {
+                if (miliSeconds == 1)
+                {
+                    return "1 Milisecond";
+                }
+                else
+                {
+                    return $"{miliSeconds} Miliseconds";
+                }
+            }
+            else
+            {
+                return SecondsToString(miliSeconds / 1000);
+            }
+        }
     }
 }
