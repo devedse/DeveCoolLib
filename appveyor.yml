@@ -1,0 +1,51 @@
+version: 1.0.{build}
+os: Visual Studio 2017
+skip_tags: true
+configuration: Release
+
+environment:
+  sonarqubetoken:
+    secure: ppdeirHI9dsM7NpQgtwIRqXbiqhJZvIyHxOFhnME5HhRFS6IbYZqRppQi7fTqv37
+
+before_build:
+  - ps: .\scripts\set-version.ps1
+  - cmd: dotnet --info
+  - cmd: dotnet restore
+  - choco install opencover.portable
+  - choco install codecov
+  - choco install xunit
+  - choco install "msbuild-sonarqube-runner" -y
+  - choco install 7zip
+
+build_script:
+  - SonarScanner.MSBuild.exe begin /k:"DeveCoolLib" /o:"devedse-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login=%sonarqubetoken% /d:sonar.cs.opencover.reportsPaths=".\DeveCoolLib.Coverage.xml" /d:sonar.coverage.exclusions="DeveCoolLib.ConsoleApp/**/*.cs,DeveCoolLib.Tests/**/*.cs"
+  - cmd: dotnet build -c Release
+  - OpenCover.Console.exe -register:user -target:"dotnet.exe" -targetargs:"test .\DeveCoolLib.Tests\DeveCoolLib.Tests.csproj -c Release" -oldstyle -returntargetcode -output:.\DeveCoolLib.Coverage.xml -filter:"+[DeveCoolLib*]*"
+  - SonarScanner.MSBuild.exe end /d:sonar.login=%sonarqubetoken%
+  - codecov -f "DeveCoolLib.Coverage.xml"
+
+#test_script:
+#  - cmd: dotnet test -c release DeveCoolLib.Tests\DeveCoolLib.Tests.csproj
+  
+after_test:
+  - cmd: dotnet pack -c Release DeveCoolLib\
+  - ps: Scripts\GoPackage.ps1
+
+artifacts:
+- path: Scripts\Output\DeveCoolLib.7z
+  name: droppackage7z
+- path: Scripts\Output\DeveCoolLib.zip
+  name: droppackagezip
+- path: 'DeveCoolLib\bin\Release\*.nupkg'
+  name: nugetPackages
+
+deploy:
+- provider: GitHub
+  auth_token:
+    secure: do7S++r1rE5E3IZujCoMONsWYJNF7eoRoPyJbxSD851I850OlEq0gsHH/Tji7o00
+  artifact: droppackage7z,droppackagezip,nugetPackages
+- provider: NuGet
+  api_key:
+    secure: pVOzQthQbu7P9SUQwjG43ZEMcwAp7dVbe4BkDVEwJFu1gWK+L11L9mdfGLC5iO5Z
+  skip_symbols: true
+  artifact: /.*\.nupkg/
