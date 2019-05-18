@@ -25,5 +25,22 @@ namespace DeveCoolLib.Tests.TextFormatting
             var expected = $@"|   | First Name |   Last Name   |{Environment.NewLine}----------------------------------{Environment.NewLine}| 1 |   Heinz    | Dovenschmirtz |{Environment.NewLine}| 2 |   Mickey   |     Mouse     |{Environment.NewLine}";
             Assert.Equal(expected, result);
         }
+
+        [Fact]
+        public void ReturnsTheRightStringWhenWorkingWithTemptyColumnsInHeader()
+        {
+            //Arrange
+            var data = new List<List<string>>();
+            data.Add(new List<string>() { "", "", "The Name" });
+            data.Add(new List<string>() { "1", "First of his Name", "Heinz Dovenschmirtz" });
+            data.Add(new List<string>() { "2", "Mother of dragons", "Mickey Mouse" });
+
+            //Act
+            var result = TableToTextPrinter.TableToText(data);
+
+            //Assert
+            var expected = $@"|                       |      The Name       |{Environment.NewLine}| 1 | First of his Name | Heinz Dovenschmirtz |{Environment.NewLine}| 2 | Mother of dragons |    Mickey Mouse     |{Environment.NewLine}";
+            Assert.Equal(expected, result);
+        }
     }
 }
