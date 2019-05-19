@@ -19,10 +19,10 @@ namespace DeveCoolLib.TextFormatting
                     {
                         if (columnNumber < row.Count)
                         {
-                            var item = row[columnNumber].Length;
+                            var item = row[columnNumber]?.Length;
                             if (longestPerColumn[columnNumber] < item)
                             {
-                                longestPerColumn[columnNumber] = item;
+                                longestPerColumn[columnNumber] = item.HasValue ? item.Value : 0;
                             }
                         }
                     }
@@ -42,10 +42,15 @@ namespace DeveCoolLib.TextFormatting
                     var hasBeenNonEmpty = false;
                     for (var columnNumber = 0; columnNumber < longestColumns; columnNumber++)
                     {
-                        var item = "";
+                        var item = string.Empty; ;
                         if (columnNumber < row.Count)
                         {
                             item = row[columnNumber];
+                            if (item == null)
+                            {
+                                //If a null value is provided, make sure we set it back to ""
+                                item = string.Empty;
+                            }
                         }
 
                         var toWrite = PadBoth(item, longestPerColumn[columnNumber]);
