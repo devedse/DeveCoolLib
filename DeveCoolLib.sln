@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeveCoolLib", "DeveCoolLib\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeveCoolLib.Tests", "DeveCoolLib.Tests\DeveCoolLib.Tests.csproj", "{8444821B-0C92-4704-B785-F565DC75F1B9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeveCoolLib.ConsoleApp", "DeveCoolLib.ConsoleApp\DeveCoolLib.ConsoleApp.csproj", "{1E2440B6-4F03-43FB-9C64-88EF274250A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{8444821B-0C92-4704-B785-F565DC75F1B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8444821B-0C92-4704-B785-F565DC75F1B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8444821B-0C92-4704-B785-F565DC75F1B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E2440B6-4F03-43FB-9C64-88EF274250A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E2440B6-4F03-43FB-9C64-88EF274250A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E2440B6-4F03-43FB-9C64-88EF274250A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E2440B6-4F03-43FB-9C64-88EF274250A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
