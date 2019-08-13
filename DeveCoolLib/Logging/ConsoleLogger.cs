@@ -5,7 +5,7 @@ namespace DeveCoolLib.Logging
     public class ConsoleLogger : ILogger
     {
         private readonly LogLevel _levelToLog;
-        private readonly static object Lockject = new object();
+        private static readonly object Lockject = new object();
 
         public ConsoleLogger(LogLevel levelToLog)
         {

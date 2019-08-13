@@ -10,7 +10,10 @@ namespace DeveCoolLib.Logging
 
         public FileLogger(string logFilePath, LogLevel levelToLog)
         {
-            if (string.IsNullOrWhiteSpace(logFilePath)) throw new ArgumentException("logFilePath is null or white space", nameof(logFilePath));
+            if (string.IsNullOrWhiteSpace(logFilePath))
+            {
+                throw new ArgumentException("logFilePath is null or white space", nameof(logFilePath));
+            }
 
             var logFileDirectory = Path.GetDirectoryName(logFilePath);
             if (!Directory.Exists(logFileDirectory))

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 
-namespace DeveCoolLib.Directory
+namespace DeveCoolLib.PathHelpers
 {
     public static class FolderHelperMethods
     {

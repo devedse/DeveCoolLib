@@ -1,5 +1,5 @@
-﻿using DeveCoolLib.Directory;
-using DeveCoolLib.Logging.Appenders;
+﻿using DeveCoolLib.Logging.Appenders;
+using DeveCoolLib.PathHelpers;
 using System;
 using System.Collections.Generic;
 using System.IO;

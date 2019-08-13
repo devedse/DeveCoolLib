@@ -7,7 +7,7 @@ namespace DeveCoolLib.Logging.Appenders
         private readonly ILogger _innerLogger;
         private readonly string _seperator;
 
-        private int _longestLengthOfLogLevel;
+        private readonly int _longestLengthOfLogLevel;
 
         public LoggingLevelLoggerAppender(ILogger innerLogger, string seperator)
         {
