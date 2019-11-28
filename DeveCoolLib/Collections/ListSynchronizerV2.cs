@@ -4,7 +4,7 @@ namespace DeveCoolLib.Collections
 {
     public static class ListSynchronizerV2
     {
-        public static void SynchronizeLists<T>(IList<T> source, IList<T> destination)
+        public static void SynchronizeLists<T>(IList<T> source, IList<T> destination) where T : class
         {
             for (int i = destination.Count - 1; i >= source.Count; i--)
             {
@@ -13,7 +13,10 @@ namespace DeveCoolLib.Collections
 
             for (int i = 0; i < destination.Count; i++)
             {
-                destination[i] = source[i];
+                if (destination[i] != source[i])
+                {
+                    destination[i] = source[i];
+                }
             }
 
             for (int i = destination.Count; i < source.Count; i++)
