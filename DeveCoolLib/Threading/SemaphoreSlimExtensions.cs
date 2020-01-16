@@ -6,6 +6,20 @@ namespace DeveCoolLib.Threading
 {
     public static class SemaphoreSlimExtensions
     {
+        public static void Run(this SemaphoreSlim semaphore, Action action, CancellationToken cancellationToken = default)
+        {
+            semaphore.Wait(cancellationToken);
+
+            try
+            {
+                action();
+            }
+            finally
+            {
+                semaphore.Release();
+            }
+        }
+
         public static async Task RunAsync(this SemaphoreSlim semaphore, Func<Task> action, CancellationToken cancellationToken = default)
         {
             await semaphore.WaitAsync(cancellationToken);
