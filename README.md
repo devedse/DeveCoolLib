@@ -3,9 +3,9 @@ The goal of this project is to be able to save the state of a code line and skip
 
 ## Build status
 
-| Travis (Linux/Osx build) | AppVeyor (Windows build) |
-|:------------------------:|:------------------------:|
-| [![Build Status](https://travis-ci.org/devedse/DeveCoolLib.svg?branch=master)](https://travis-ci.org/devedse/DeveCoolLib) | [![Build status](https://ci.appveyor.com/api/projects/status/die4itlx0ueh72sf?svg=true)](https://ci.appveyor.com/project/devedse/devecoollib) |
+| Travis (Linux/Osx build) | AppVeyor (Windows build) | Github Actions (Windows and Linux build) |
+|:------------------------:|:------------------------:|:----------------------------------------:|
+| [![Build Status](https://travis-ci.org/devedse/DeveCoolLib.svg?branch=master)](https://travis-ci.org/devedse/DeveCoolLib) | [![Build status](https://ci.appveyor.com/api/projects/status/die4itlx0ueh72sf?svg=true)](https://ci.appveyor.com/project/devedse/devecoollib) | ![.NET Core](https://github.com/devedse/DeveCoolLib/workflows/.NET%20Core/badge.svg) |
 
 ## Code Coverage Status
 
