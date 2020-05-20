@@ -11,7 +11,7 @@ before_build:
   - ps: .\scripts\set-version.ps1
   - dotnet --info
   - dotnet restore
-  - dotnet tool install --global dotnet-reportgenerator-globaltool --version 4.1.1
+  - dotnet tool install --global dotnet-reportgenerator-globaltool
   #- choco install opencover.portable
   - choco install codecov
   #- choco install xunit
@@ -19,12 +19,12 @@ before_build:
   - choco install 7zip
 
 build_script:
-  - SonarScanner.MSBuild.exe begin /k:"DeveCoolLib" /o:"devedse-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login=%sonarqubetoken% /d:sonar.cs.opencover.reportsPaths=".\TestResults\Coverage\DeveCoolLib.Coverage.xml" /d:sonar.coverage.exclusions="DeveCoolLib.ConsoleApp/**/*.cs,DeveCoolLib.Tests/**/*.cs"
+  - SonarScanner.MSBuild.exe begin /k:"DeveCoolLib" /o:"devedse-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login=%sonarqubetoken% /d:sonar.cs.opencover.reportsPaths=".\DeveCoolLib.Tests\TestResults\Coverage\coverage.opencover.xml" /d:sonar.coverage.exclusions="DeveCoolLib.ConsoleApp/**/*.cs,DeveCoolLib.Tests/**/*.cs"
   - dotnet build -c Release
   #- OpenCover.Console.exe -register:user -target:"dotnet.exe" -targetargs:"test .\DeveCoolLib.Tests\DeveCoolLib.Tests.csproj -c Release" -oldstyle -returntargetcode -output:.\DeveCoolLib.Coverage.xml -filter:"+[DeveCoolLib*]*"
-  - dotnet test --no-build -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./TestResults/Coverage/
+  - dotnet test --no-build -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=\"cobertura,opencover\" /p:CoverletOutput=./TestResults/Coverage/
   - SonarScanner.MSBuild.exe end /d:sonar.login=%sonarqubetoken%
-  - codecov -f ".\TestResults\Coverage\DeveCoolLib.Coverage.xml"
+  - codecov -f ".\DeveCoolLib.Tests\TestResults\Coverage\coverage.opencover.xml"
 
 #test_script:
 #  - cmd: dotnet test -c release DeveCoolLib.Tests\DeveCoolLib.Tests.csproj
