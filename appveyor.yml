@@ -9,26 +9,28 @@ environment:
 
 before_build:
   - ps: .\scripts\set-version.ps1
-  - cmd: dotnet --info
-  - cmd: dotnet restore
-  - choco install opencover.portable
+  - dotnet --info
+  - dotnet restore
+  - dotnet tool install --global dotnet-reportgenerator-globaltool --version 4.1.1
+  #- choco install opencover.portable
   - choco install codecov
-  - choco install xunit
+  #- choco install xunit
   - choco install "msbuild-sonarqube-runner" -y
   - choco install 7zip
 
 build_script:
-  - SonarScanner.MSBuild.exe begin /k:"DeveCoolLib" /o:"devedse-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login=%sonarqubetoken% /d:sonar.cs.opencover.reportsPaths=".\DeveCoolLib.Coverage.xml" /d:sonar.coverage.exclusions="DeveCoolLib.ConsoleApp/**/*.cs,DeveCoolLib.Tests/**/*.cs"
-  - cmd: dotnet build -c Release
-  - OpenCover.Console.exe -register:user -target:"dotnet.exe" -targetargs:"test .\DeveCoolLib.Tests\DeveCoolLib.Tests.csproj -c Release" -oldstyle -returntargetcode -output:.\DeveCoolLib.Coverage.xml -filter:"+[DeveCoolLib*]*"
+  - SonarScanner.MSBuild.exe begin /k:"DeveCoolLib" /o:"devedse-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login=%sonarqubetoken% /d:sonar.cs.opencover.reportsPaths=".\TestResults\Coverage\DeveCoolLib.Coverage.xml" /d:sonar.coverage.exclusions="DeveCoolLib.ConsoleApp/**/*.cs,DeveCoolLib.Tests/**/*.cs"
+  - dotnet build -c Release
+  #- OpenCover.Console.exe -register:user -target:"dotnet.exe" -targetargs:"test .\DeveCoolLib.Tests\DeveCoolLib.Tests.csproj -c Release" -oldstyle -returntargetcode -output:.\DeveCoolLib.Coverage.xml -filter:"+[DeveCoolLib*]*"
+  - dotnet test --no-build -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./TestResults/Coverage/
   - SonarScanner.MSBuild.exe end /d:sonar.login=%sonarqubetoken%
-  - codecov -f "DeveCoolLib.Coverage.xml"
+  - codecov -f ".\TestResults\Coverage\DeveCoolLib.Coverage.xml"
 
 #test_script:
 #  - cmd: dotnet test -c release DeveCoolLib.Tests\DeveCoolLib.Tests.csproj
   
 after_test:
-  - cmd: dotnet pack -c Release DeveCoolLib\
+  - dotnet pack -c Release DeveCoolLib\
   - ps: Scripts\GoPackage.ps1
 
 artifacts:
