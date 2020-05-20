@@ -25,13 +25,12 @@ build_script:
   - dotnet test --no-build -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=\"cobertura,opencover\" /p:CoverletOutput=./TestResults/Coverage/
   - SonarScanner.MSBuild.exe end /d:sonar.login=%sonarqubetoken%
   - codecov -f ".\DeveCoolLib.Tests\TestResults\Coverage\coverage.opencover.xml"
-
-#test_script:
-#  - cmd: dotnet test -c release DeveCoolLib.Tests\DeveCoolLib.Tests.csproj
-  
+  - reportgenerator -reports:.\DeveCoolLib.Tests\TestResults\Coverage\coverage.opencover.xml -targetdir:.\DeveCoolLib.Tests\TestResults\Coverage\HtmlInline\ -reporttypes:HtmlInline_AzurePipelines
+ 
 after_test:
   - dotnet pack -c Release DeveCoolLib\
   - ps: Scripts\GoPackage.ps1
+  - 7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=1536m -mfb=273 -ms=on -mqs=on -sccUTF-8 "Scripts\Output\CodeCoverageReport.7z" ".\DeveCoolLib.Tests\TestResults\Coverage\HtmlInline\*"
 
 artifacts:
 - path: Scripts\Output\DeveCoolLib.7z
@@ -40,6 +39,8 @@ artifacts:
   name: droppackagezip
 - path: 'DeveCoolLib\bin\Release\*.nupkg'
   name: nugetPackages
+- path: Scripts\Output\CodeCoverageReport.7z
+  name: CodeCoverageReport
 
 deploy:
 - provider: GitHub
