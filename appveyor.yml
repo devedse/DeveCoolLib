@@ -39,6 +39,8 @@ artifacts:
   name: droppackagezip
 - path: 'DeveCoolLib\bin\Release\*.nupkg'
   name: nugetPackages
+- path: 'DeveCoolLib\bin\Release\*.snupkg'
+  name: snugetPackages
 - path: Scripts\Output\CodeCoverageReport.7z
   name: CodeCoverageReport
 
