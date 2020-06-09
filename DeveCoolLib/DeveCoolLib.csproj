@@ -13,6 +13,16 @@
     <Description>This is a library used in some of Devedse's projects. It contains helpers and other code stuff to build applications.</Description>
     <PackageProjectUrl>https://github.com/devedse/DeveCoolLib</PackageProjectUrl>
     <PackageTags>csharp;code;helpers</PackageTags>
+
+    <!-- Optional: Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+ 
+    <!-- Optional: Embed source files that are not tracked by the source control manager in the PDB -->
+    <EmbedUntrackedSources>false</EmbedUntrackedSources>
+  
+    <!-- Optional: Build symbol package (.snupkg) to distribute the PDB containing Source Link -->
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
 </Project>
