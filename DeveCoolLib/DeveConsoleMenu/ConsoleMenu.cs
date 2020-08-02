@@ -76,6 +76,7 @@ namespace DeveCoolLib.DeveConsoleMenu
                 catch (OperationCanceledException)
                 {
                     input = AutoSelectOption.ToString();
+                    Console.WriteLine(input);
                 }
 
                 if (int.TryParse(input, out int result))
