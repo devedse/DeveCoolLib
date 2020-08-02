@@ -15,7 +15,7 @@ namespace DeveCoolLib.ConsoleApp
         private static void TestConsoleMenu()
         {
             var running = true;
-            var menu = new ConsoleMenu(ConsoleMenuType.KeyPress);
+            var menu = new ConsoleMenu(ConsoleMenuType.StringInput, 1, 1, 3);
 
             menu.MenuOptions.Add(new ConsoleMenuOption("Do something", () => Console.WriteLine("This is the first option")));
             menu.MenuOptions.Add(new ConsoleMenuOption("Do something else", () => Console.WriteLine("This is the second option")));
@@ -29,14 +29,14 @@ namespace DeveCoolLib.ConsoleApp
                 Console.WriteLine();
                 Console.WriteLine();
 
-                if (menu.ConsoleMenuType == ConsoleMenuType.KeyPress)
-                {
-                    menu.ConsoleMenuType = ConsoleMenuType.StringInput;
-                }
-                else
-                {
-                    menu.ConsoleMenuType = ConsoleMenuType.KeyPress;
-                }
+                //if (menu.ConsoleMenuType == ConsoleMenuType.KeyPress)
+                //{
+                //    menu.ConsoleMenuType = ConsoleMenuType.StringInput;
+                //}
+                //else
+                //{
+                //    menu.ConsoleMenuType = ConsoleMenuType.KeyPress;
+                //}
             }
         }
     }
