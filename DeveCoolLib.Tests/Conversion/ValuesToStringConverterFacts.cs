@@ -6,6 +6,30 @@ namespace DeveCoolLib.Tests.Conversion
     public class ValuesToStringConverterFacts
     {
         [Fact]
+        public void ConvertsBytesToTb()
+        {
+            //Arrange
+
+            //Act
+            var result = ValuesToStringHelper.BytesToString(12345678000000L).Replace('.', ',');
+
+            //Assert
+            Assert.Equal("11,2TB", result);
+        }
+
+        [Fact]
+        public void ConvertsALotOfBytesToEB()
+        {
+            //Arrange
+
+            //Act
+            var result = ValuesToStringHelper.BytesToString(long.MaxValue - 1).Replace('.', ',');
+
+            //Assert
+            Assert.Equal("8EB", result);
+        }
+
+        [Fact]
         public void ConvertsBytesToMb()
         {
             //Arrange
@@ -88,6 +112,30 @@ namespace DeveCoolLib.Tests.Conversion
 
             //Assert
             Assert.Equal("0 Seconds", result);
+        }
+
+        [Fact]
+        public void ConvertALotOfSeconds()
+        {
+            //Arrange
+
+            //Act
+            var result = ValuesToStringHelper.SecondsToString(1234567890123L).Replace('.', ',');
+
+            //Assert
+            Assert.Equal("342935525 Hours", result);
+        }
+
+        [Fact]
+        public void ConvertMaxOfSeconds()
+        {
+            //Arrange
+
+            //Act
+            var result = ValuesToStringHelper.SecondsToString(long.MaxValue).Replace('.', ',');
+
+            //Assert
+            Assert.Equal("2562047788015215,5 Hours", result);
         }
     }
 }
