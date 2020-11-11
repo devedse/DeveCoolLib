@@ -2,7 +2,7 @@
 
 namespace DeveCoolLib.DeveConsoleMenu
 {
-    public class ConsoleMenuOption
+    public class ConsoleMenuOption : IConsoleMenuOption
     {
         public string Text { get; }
         public Action ActionToExecute { get; }
