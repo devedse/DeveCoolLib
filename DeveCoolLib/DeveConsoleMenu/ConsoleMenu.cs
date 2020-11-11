@@ -12,7 +12,7 @@ namespace DeveCoolLib.DeveConsoleMenu
         public int StartNumber { get; set; }
         public int? AutoSelectOption { get; set; }
         public int AutoSelectWaitTimerInSeconds { get; set; }
-        public List<ConsoleMenuOption> MenuOptions { get; set; } = new List<ConsoleMenuOption>();
+        public List<IConsoleMenuOption> MenuOptions { get; set; } = new List<IConsoleMenuOption>();
 
 
         public ConsoleMenu(ConsoleMenuType consoleMenuType, int startNumber = 1, int? autoSelectOption = null, int autoSelectWaitTimerInSeconds = 3)
@@ -43,6 +43,11 @@ namespace DeveCoolLib.DeveConsoleMenu
         }
 
         public void WaitForResult()
+        {
+            WaitForResultAsync().Wait();
+        }
+
+        public async Task WaitForResultAsync()
         {
             var cancellationTokenSource = new CancellationTokenSource();
 
@@ -84,7 +89,7 @@ namespace DeveCoolLib.DeveConsoleMenu
                     int actualChoice = result - StartNumber;
                     if (actualChoice >= 0 && actualChoice < MenuOptions.Count)
                     {
-                        ExecuteOption(actualChoice);
+                        await ExecuteOption(actualChoice);
                         return;
                     }
                 }
@@ -93,13 +98,21 @@ namespace DeveCoolLib.DeveConsoleMenu
             }
         }
 
-        private void ExecuteOption(int id)
+        private Task ExecuteOption(int id)
         {
             var option = MenuOptions[id];
-            option.ActionToExecute();
+
+            switch (option)
+            {
+                case ConsoleMenuOption c:
+                    c.ActionToExecute();
+                    return Task.CompletedTask;
+                case ConsoleMenuOptionAsync c:
+                    return c.ActionToExecute();                    
+                default:
+                    throw new ArgumentException($"IConsoleMenuOption implementation not supported. Please use '{nameof(ConsoleMenuOption)}' or '{nameof(ConsoleMenuOptionAsync)}'.");
+            }
         }
-
-
 
 
         public static string CancellableReadKey(CancellationToken cancellationToken)
