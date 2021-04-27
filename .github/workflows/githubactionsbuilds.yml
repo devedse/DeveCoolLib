@@ -156,7 +156,5 @@ jobs:
           ./DeveCoolLib/bin/Release/*.snupkg
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
     - name: Push NuGet
       run: dotnet nuget push ./DeveCoolLib/bin/Release/DeveCoolLib.1.0.${{needs.generate_version_number.outputs.build_number}}.nupkg -k ${{ secrets.NUGETTOKEN }} -s https://api.nuget.org/v3/index.json
