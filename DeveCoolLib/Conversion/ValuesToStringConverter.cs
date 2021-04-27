@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DeveCoolLib.Conversion
 {
     public static class ValuesToStringHelper
     {
-        public static string BytesToString(long byteCount)
+        public static string BytesToString(long byteCount, IFormatProvider provider = null)
         {
             string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" }; //Longs run out around EB
             if (byteCount == 0)
@@ -18,10 +16,10 @@ namespace DeveCoolLib.Conversion
             int place = Math.Min(suf.Length - 1, Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024))));
             double num = Math.Round(bytes / Math.Pow(1024, place), 1);
             var theNumber = Math.Sign(byteCount) * num;
-            return $"{theNumber}{suf[place]}";
+            return $"{theNumber.ToString(provider)}{suf[place]}";
         }
 
-        public static string SecondsToString(long seconds)
+        public static string SecondsToString(long seconds, IFormatProvider provider = null)
         {
             string[] suf = { "Second", "Minute", "Hour" };
             if (seconds == 0)
@@ -33,10 +31,10 @@ namespace DeveCoolLib.Conversion
             int place = Math.Min(suf.Length - 1, Convert.ToInt32(Math.Floor(Math.Log(bytes, 60))));
             double num = Math.Round(bytes / Math.Pow(60, place), 1);
             var theNumber = Math.Sign(seconds) * num;
-            return $"{theNumber} {suf[place]}{(num == 1 ? "" : "s")}";
+            return $"{theNumber.ToString(provider)} {suf[place]}{(num == 1 ? "" : "s")}";
         }
 
-        public static string MiliSecondsToString(long miliSeconds)
+        public static string MiliSecondsToString(long miliSeconds, IFormatProvider provider = null)
         {
             if (miliSeconds < 1000)
             {
@@ -51,7 +49,7 @@ namespace DeveCoolLib.Conversion
             }
             else
             {
-                return SecondsToString(miliSeconds / 1000);
+                return SecondsToString(miliSeconds / 1000, provider);
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using DeveCoolLib.Conversion;
+using System.Globalization;
 using Xunit;
 
 namespace DeveCoolLib.Tests.Conversion
@@ -54,6 +55,30 @@ namespace DeveCoolLib.Tests.Conversion
         }
 
         [Fact]
+        public void ConvertsBytesToKbWithInvariantCulture()
+        {
+            //Arrange
+
+            //Act
+            var result = ValuesToStringHelper.BytesToString(1155L, CultureInfo.InvariantCulture);
+
+            //Assert
+            Assert.Equal("1.1KB", result);
+        }
+
+        [Fact]
+        public void ConvertsBytesToKbWithNLCulture()
+        {
+            //Arrange
+
+            //Act
+            var result = ValuesToStringHelper.BytesToString(1155L, CultureInfo.GetCultureInfo("nl-nl"));
+
+            //Assert
+            Assert.Equal("1,1KB", result);
+        }
+
+        [Fact]
         public void Converts0BytesToB()
         {
             //Arrange
@@ -73,6 +98,30 @@ namespace DeveCoolLib.Tests.Conversion
 
             //Act
             var result = ValuesToStringHelper.SecondsToString(3800L).Replace('.', ',');
+
+            //Assert
+            Assert.Equal("1,1 Hours", result);
+        }
+
+        [Fact]
+        public void ConvertsSecondsToHoursInvariantCulture()
+        {
+            //Arrange
+
+            //Act
+            var result = ValuesToStringHelper.SecondsToString(3800L, CultureInfo.InvariantCulture);
+
+            //Assert
+            Assert.Equal("1.1 Hours", result);
+        }
+
+        [Fact]
+        public void ConvertsSecondsToHoursNLCulture()
+        {
+            //Arrange
+
+            //Act
+            var result = ValuesToStringHelper.SecondsToString(3800L, CultureInfo.GetCultureInfo("nl-nl"));
 
             //Assert
             Assert.Equal("1,1 Hours", result);
