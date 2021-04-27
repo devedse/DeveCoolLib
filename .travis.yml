@@ -1,20 +1,20 @@
-# Verifying yaml files: http://www.yamllint.com/ or https://github.com/adrienverge/yamllint
+# # Verifying yaml files: http://www.yamllint.com/ or https://github.com/adrienverge/yamllint
 
-branches:
-  only:
-  - master
+# branches:
+#   only:
+#   - master
 
-services:
-  - docker
+# services:
+#   - docker
 
-matrix:
-  include:
-    - mono: none
-      os: linux
-      dist: bionic # Ubuntu 18.04
+# matrix:
+#   include:
+#     - mono: none
+#       os: linux
+#       dist: bionic # Ubuntu 18.04
 
-script:
-  - docker build -t devedse/devecoollib .;
+# script:
+#   - docker build -t devedse/devecoollib .;
 
-notifications:
-  email: false
+# notifications:
+#   email: false

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "DeveCoolLib.ConsoleApp": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
