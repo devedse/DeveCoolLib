@@ -13,7 +13,7 @@ namespace DeveCoolLib.Logging
             var consoleLogger = new ConsoleLogger(LogLevel.Verbose);
 
             var logFileName = useDifferentFileNamesForLogs ? DateTime.Now.ToString("yyyy-MM-dd--HH-mm-ss") + ".txt" : "Log.txt";
-            var fileLoggerPath = Path.Combine(FolderHelperMethods.AssemblyDirectory.Value, "Logs", logFileName);
+            var fileLoggerPath = Path.Combine(FolderHelperMethods.AssemblyDirectory, "Logs", logFileName);
             var fileLogger = new FileLogger(fileLoggerPath, LogLevel.Verbose);
 
             var multiLogger = new MultiLoggerAppender(new List<ILogger>() { consoleLogger, fileLogger });

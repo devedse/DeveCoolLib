@@ -57,11 +57,11 @@ namespace DeveCoolLib.TextFormatting
 
                         if (hasBeenNonEmpty || (lastToWriteWasEmpty || !string.IsNullOrEmpty(item)))
                         {
-                            sb.Append("|");
+                            sb.Append('|');
                         }
                         else
                         {
-                            sb.Append(" ");
+                            sb.Append(' ');
                         }
                         sb.Append($" {toWrite} ");
                         if (hasBeenNonEmpty == false)

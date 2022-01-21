@@ -80,7 +80,7 @@ namespace DeveCoolLib.DeveConsoleMenu
                 }
                 catch (OperationCanceledException)
                 {
-                    input = AutoSelectOption.ToString();
+                    input = AutoSelectOption?.ToString() ?? "";
                     Console.WriteLine(input);
                 }
 

@@ -4,7 +4,7 @@ namespace DeveCoolLib.Conversion
 {
     public static class ValuesToStringHelper
     {
-        public static string BytesToString(long byteCount, IFormatProvider provider = null)
+        public static string BytesToString(long byteCount, IFormatProvider? provider = null)
         {
             string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" }; //Longs run out around EB
             if (byteCount == 0)
@@ -19,7 +19,7 @@ namespace DeveCoolLib.Conversion
             return $"{theNumber.ToString(provider)}{suf[place]}";
         }
 
-        public static string SecondsToString(long seconds, IFormatProvider provider = null)
+        public static string SecondsToString(long seconds, IFormatProvider? provider = null)
         {
             string[] suf = { "Second", "Minute", "Hour" };
             if (seconds == 0)
@@ -34,7 +34,7 @@ namespace DeveCoolLib.Conversion
             return $"{theNumber.ToString(provider)} {suf[place]}{(num == 1 ? "" : "s")}";
         }
 
-        public static string MiliSecondsToString(long miliSeconds, IFormatProvider provider = null)
+        public static string MiliSecondsToString(long miliSeconds, IFormatProvider? provider = null)
         {
             if (miliSeconds < 1000)
             {
