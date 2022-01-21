@@ -15,7 +15,7 @@ DeleteFileIfExists $7zFilePath
 DeleteFileIfExists $zipFilePath
 DeleteFolderIfExists $outputDir
 
-$buildPath = Join-Path $solutionRoot "DeveCoolLib\bin\Release\netstandard2.1"
+$buildPath = Join-Path $solutionRoot "DeveCoolLib\bin\Release\net6.0"
 
 # Exclude *.pdb files
 7z a -mm=Deflate -mfb=258 -mpass=15 "$zipFilePath" "$buildPath\*" '-x!*.pdb'
