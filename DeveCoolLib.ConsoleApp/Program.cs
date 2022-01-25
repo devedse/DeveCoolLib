@@ -1,5 +1,7 @@
 ﻿using DeveCoolLib.DeveConsoleMenu;
+using DeveCoolLib.Streams;
 using System;
+using System.IO;
 
 namespace DeveCoolLib.ConsoleApp
 {
@@ -9,7 +11,37 @@ namespace DeveCoolLib.ConsoleApp
         public static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+            TestConsoleOut();
             TestConsoleMenu();
+        }
+
+        private static void TestConsoleOut()
+        {
+            var mov = new MovingMemoryStream(400);
+
+            var writer = new StreamWriter(mov)
+            {
+                AutoFlush = true
+            };
+            var reader = new StreamReader(mov);
+
+            var longstring = new string('a', 1500);
+            writer.Write("B");
+            writer.WriteLine("L");
+            writer.WriteLine(longstring);
+            writer.WriteLine("Hello");
+            writer.WriteLine("Devedse");
+            writer.WriteLine("Test");
+
+            int i = 0;
+            string line;
+            while ((line = reader.ReadLine()) != null)
+            {
+                Console.WriteLine($"{i}: {line}");
+                i++;
+            }
+
+            Console.WriteLine();
         }
 
         private static void TestConsoleMenu()
