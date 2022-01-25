@@ -102,17 +102,10 @@ namespace DeveCoolLib.Tests.Streams
             Assert.Equal("Bye", reader.ReadLine());
             Assert.Null(reader.ReadLine());
 
-            if (streamWriterBufferSize == 1 && streamReaderBufferSize == 1 && movingMemoryStreamBufferSize == 5)
-            {
-
-            }
-
             writer.Write("Mic");
             writer.Write("roso");
             writer.Write("ft");
             writer.WriteLine(" Windows");
-
-        
 
             Assert.Equal("Microsoft Windows", reader.ReadLine());
         }
