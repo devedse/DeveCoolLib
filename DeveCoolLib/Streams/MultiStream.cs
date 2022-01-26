@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DeveCoolLib.ConsoleOut
+namespace DeveCoolLib.Streams
 {
     public class MultiStream : Stream
     {

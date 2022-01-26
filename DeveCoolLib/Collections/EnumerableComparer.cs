@@ -6,6 +6,19 @@ namespace DeveCoolLib.Collections
 {
     public static class EnumerableComparer
     {
+        private static bool AreEqual<T>(T left, T right)
+        {
+            if (left == null && right == null)
+            {
+                return true;
+            }
+            else if (left == null || right == null)
+            {
+                return false;
+            }
+            return left.Equals(right);
+        }
+
         /// <summary>
         /// This method compares 2 enumerables. Please ensure that there's only 1 item with the same ID per enumerable
         /// </summary>
@@ -16,8 +29,8 @@ namespace DeveCoolLib.Collections
         /// <returns>The compare results</returns>
         public static IEnumerableCompareResults<T> CompareEnumerables<T, TKey>(IEnumerable<T> oldList, IEnumerable<T> newList, Func<T, TKey> selector)
         {
-            var addedItems = newList.Where(newItem => !oldList.Any(oldItem => selector(newItem).Equals(selector(oldItem)))).ToList();
-            var removedItems = oldList.Where(oldItem => !newList.Any(newItem => selector(oldItem).Equals(selector(newItem)))).ToList();
+            var addedItems = newList.Where(newItem => !oldList.Any(oldItem => AreEqual(selector(newItem), selector(oldItem)))).ToList();
+            var removedItems = oldList.Where(oldItem => !newList.Any(newItem => AreEqual(selector(oldItem), selector(newItem)))).ToList();
 
             var updatedItems = new List<IEnumerableCompareItemResult<T>>();
 
@@ -25,7 +38,7 @@ namespace DeveCoolLib.Collections
             {
                 var oldItemSelector = selector(oldItem);
 
-                var found = newList.FirstOrDefault(newItem => oldItemSelector.Equals(selector(newItem)));
+                var found = newList.FirstOrDefault(newItem => AreEqual(oldItemSelector, selector(newItem)));
                 if (found != null)
                 {
                     updatedItems.Add(new IEnumerableCompareItemResult<T>(oldItem, found));
@@ -34,12 +47,12 @@ namespace DeveCoolLib.Collections
             return new IEnumerableCompareResults<T>(addedItems, removedItems, updatedItems);
         }
 
-        public static bool SequenceEqual<T>(IEnumerable<T> first, IEnumerable<T> second, Func<T, T, bool> equalizer)
+        public static bool SequenceEqual<T>(IEnumerable<T> first, IEnumerable<T> second, Func<T?, T?, bool> equalizer)
         {
-            return Enumerable.SequenceEqual(first, second, EqualityComparerFactory.Create<T>((t) => t.GetHashCode(), equalizer));
+            return Enumerable.SequenceEqual(first, second, EqualityComparerFactory.Create<T>((t) => t?.GetHashCode() ?? 0, equalizer));
         }
 
-        public static bool SequenceEqual<T>(IEnumerable<T> first, IEnumerable<T> second, params Func<T, object>[] equalizer)
+        public static bool SequenceEqual<T>(IEnumerable<T> first, IEnumerable<T> second, params Func<T?, object>[] equalizer)
         {
             if (equalizer == null || equalizer.Length == 0)
             {

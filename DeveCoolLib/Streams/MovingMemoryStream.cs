@@ -14,8 +14,8 @@ namespace DeveCoolLib.Streams
 
         public override long Length => int.MaxValue;
 
-        private long _position;
-        public override long Position { get => _position; set => throw new NotImplementedException(); }
+        //This does not make sense as we have a different read and write position
+        public override long Position { get => 0; set => throw new NotImplementedException(); }
 
         public int BufferSize { get; }
 

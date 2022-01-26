@@ -16,7 +16,7 @@ namespace DeveCoolLib.Logging.Appenders
 
             foreach (var val in Enum.GetValues(typeof(LogLevel)))
             {
-                var valLength = val.ToString().Length;
+                var valLength = val?.ToString()?.Length ?? 0;
                 if (valLength > _longestLengthOfLogLevel)
                 {
                     _longestLengthOfLogLevel = valLength;

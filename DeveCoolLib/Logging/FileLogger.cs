@@ -16,7 +16,7 @@ namespace DeveCoolLib.Logging
             }
 
             var logFileDirectory = Path.GetDirectoryName(logFilePath);
-            if (!Directory.Exists(logFileDirectory))
+            if (!string.IsNullOrWhiteSpace(logFileDirectory) && !Directory.Exists(logFileDirectory))
             {
                 Directory.CreateDirectory(logFileDirectory);
             }
