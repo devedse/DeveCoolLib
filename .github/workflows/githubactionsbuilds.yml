@@ -76,7 +76,7 @@ jobs:
     - name: Build
       run: dotnet build DeveCoolLib.sln -c Release --no-restore /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
     - name: Test
-      run: dotnet test DeveCoolLib.sln --no-build --verbosity normal
+      run: dotnet test DeveCoolLib.sln -c Release --no-build --verbosity normal
 
   build_windows:
     needs: generate_version_number
