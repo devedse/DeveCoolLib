@@ -193,5 +193,8 @@ jobs:
       with:
         name: DeveCoolLibNuGet
         path: ./artifacts/
+    - name: Run tree
+      run: |
+        tree /a
     - name: Push NuGet
       run: dotnet nuget push ./artifacts/DeveCoolLibNuGet/DeveCoolLib.1.0.${{needs.generate_version_number.outputs.build_number}}.nupkg -k ${{ secrets.NUGETTOKEN }} -s https://api.nuget.org/v3/index.json
