@@ -192,7 +192,7 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: DeveCoolLibNuGet
-        path: ./artifacts/
+        path: ./artifacts/DeveCoolLibNuGet/
     - name: Run tree
       run: |
         tree /a
