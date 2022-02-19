@@ -1,10 +1,6 @@
 name: GitHubActionsBuilds
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: push
 
 jobs:
   generate_version_number:
@@ -127,8 +123,40 @@ jobs:
         #fail_ci_if_error: true # optional (default = false)
         verbose: true # optional (default = false)
 
+    - name: Run GoPackage.ps1 script
+      run: .\Scripts\GoPackage.ps1
+      shell: powershell
+  
 
-        
+    - uses: actions/upload-artifact@v2
+      with:
+        name: DeveCoolLib7z
+        path: ./Scripts/Output/DeveCoolLib.7z
+    - uses: actions/upload-artifact@v2
+      with:
+        name: DeveCoolLibZip
+        path: ./Scripts/Output/DeveCoolLib.zip
+    - uses: actions/upload-artifact@v2
+      with:
+        name: DeveCoolLibNuGet
+        path: |
+          ./DeveCoolLib/bin/Release/*.nupkg
+          ./DeveCoolLib/bin/Release/*.snupkg
+
+  release_github:
+    needs: [generate_version_number, intellicode, build_windows, build_linux]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v2
+      with:
+        path: ./artifacts/
+
+    - name: Display structure of downloaded files
+      run: |
+        cd ./artifacts/
+        ls -R
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -141,20 +169,29 @@ jobs:
           ${{ github.event.head_commit.message }}
         draft: false
         prerelease: false
-    - name: Run GoPackage.ps1 script
-      run: .\Scripts\GoPackage.ps1
-      shell: powershell
-  
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
         tag_name: 1.0.${{needs.generate_version_number.outputs.build_number}}
         files: |
-          ./Scripts/Output/DeveCoolLib.7z
-          ./Scripts/Output/DeveCoolLib.zip
-          ./DeveCoolLib/bin/Release/*.nupkg
-          ./DeveCoolLib/bin/Release/*.snupkg
+          ./artifacts/DeveCoolLib7z/DeveCoolLib.7z
+          ./artifacts/DeveCoolLibZip/DeveCoolLib.zip
+          ./artifacts/DeveCoolLibNuGet/*.nupkg
+          ./artifacts/DeveCoolLibNuGet/*.snupkg
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+  release_nuget:
+    needs: [intellicode, build_windows, release_github]
+    runs-on: windows-latest
+    if: github.ref == 'refs/heads/master'
+    steps:
+    - uses: actions/checkout@v2
+    - name: Download all artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: DeveCoolLibNuGet
+        path: ./artifacts/
     - name: Push NuGet
-      run: dotnet nuget push ./DeveCoolLib/bin/Release/DeveCoolLib.1.0.${{needs.generate_version_number.outputs.build_number}}.nupkg -k ${{ secrets.NUGETTOKEN }} -s https://api.nuget.org/v3/index.json
+      run: dotnet nuget push ./artifacts/DeveCoolLibNuGet/DeveCoolLib.1.0.${{needs.generate_version_number.outputs.build_number}}.nupkg -k ${{ secrets.NUGETTOKEN }} -s https://api.nuget.org/v3/index.json
