@@ -144,7 +144,7 @@ jobs:
           ./DeveCoolLib/bin/Release/*.snupkg
 
   release_github:
-    needs: [generate_version_number, intellicode, build_windows, build_linux]
+    needs: [generate_version_number, intellicode, build_windows, build_linux, build_docker]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
@@ -183,7 +183,7 @@ jobs:
 
 
   release_nuget:
-    needs: [intellicode, build_windows, release_github]
+    needs: [generate_version_number, intellicode, build_windows, build_linux, build_docker, release_github]
     runs-on: windows-latest
     if: github.ref == 'refs/heads/master'
     steps:
