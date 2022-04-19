@@ -115,8 +115,8 @@ jobs:
       run: tree /A /F
     - name: Run CodeCov #codecov -f ".\DeveCoolLib.Tests\TestResults\Coverage\coverage.opencover.xml"
       uses: codecov/codecov-action@v2
-      working-directory: ./DeveCoolLib.Tests/TestResults
       with:
+        directory: ./DeveCoolLib.Tests/TestResults
         #token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
         # files: ./DeveCoolLib.Tests/TestResults/Coverage/coverage.opencover.xml # optional
         #flags: unittests # optional
