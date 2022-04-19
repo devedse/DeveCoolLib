@@ -112,7 +112,7 @@ jobs:
     - name: Pack
       run: dotnet pack DeveCoolLib\DeveCoolLib.csproj --verbosity normal --no-build -c Release /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
     - name: Treetje
-      run: tree /A
+      run: tree /A /F
     - name: Run CodeCov #codecov -f ".\DeveCoolLib.Tests\TestResults\Coverage\coverage.opencover.xml"
       uses: codecov/codecov-action@v2
       with:
