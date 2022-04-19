@@ -104,7 +104,7 @@ jobs:
       run: dotnet build DeveCoolLib.sln -c Release --no-restore /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
     - name: dotnet test
       #run: dotnet test DeveCoolLib.sln --verbosity normal --no-build -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=\`"cobertura,opencover\`" /p:CoverletOutput=./TestResults/Coverage/
-      run: dotnet test DeveCoolLib.sln --verbosity normal --no-build -c Release --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura,opencover
+      run: dotnet test DeveCoolLib.sln --verbosity normal --no-build -c Release --results-directory:"./DeveCoolLib.Tests/TestResults/Coverage/" --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura,opencover
     - name: SonarQube end
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -117,7 +117,7 @@ jobs:
       uses: codecov/codecov-action@v2
       with:
         #token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-        files: ${{ github.workspace }}\DeveCoolLib.Tests\TestResults\*\coverage.opencover.xml # optional
+        files: ./DeveCoolLib.Tests/TestResults/Coverage/coverage.opencover.xml # optional
         #flags: unittests # optional
         #name: codecov-umbrella # optional
         fail_ci_if_error: true # optional (default = false)
