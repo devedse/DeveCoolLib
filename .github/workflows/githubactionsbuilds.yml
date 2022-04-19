@@ -111,16 +111,10 @@ jobs:
       run: dotnet-sonarscanner end /d:sonar.login=${{secrets.SONARQUBETOKEN}}
     - name: Pack
       run: dotnet pack DeveCoolLib\DeveCoolLib.csproj --verbosity normal --no-build -c Release /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
-    - name: Treetje
-      run: tree /A /F
-    - name: Run CodeCov #codecov -f ".\DeveCoolLib.Tests\TestResults\Coverage\coverage.opencover.xml"
+    - name: Run CodeCov
       uses: codecov/codecov-action@v2
       with:
         directory: ./DeveCoolLib.Tests/TestResults
-        #token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-        # files: ./DeveCoolLib.Tests/TestResults/Coverage/coverage.opencover.xml # optional
-        #flags: unittests # optional
-        #name: codecov-umbrella # optional
         fail_ci_if_error: true # optional (default = false)
         verbose: true # optional (default = false)
 
