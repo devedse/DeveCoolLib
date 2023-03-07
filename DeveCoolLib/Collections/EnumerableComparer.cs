@@ -23,27 +23,21 @@ namespace DeveCoolLib.Collections
         /// This method compares 2 enumerables. Please ensure that there's only 1 item with the same ID per enumerable
         /// </summary>
         /// <typeparam name="T">Type of items</typeparam>
-        /// <param name="oldList">The old enumerable</param>
-        /// <param name="newList">The new enumerable</param>
+        /// <param name="data">The old enumerable</param>
+        /// <param name="desiredData">The new enumerable</param>
         /// <param name="selector">The selector to compare between old and new items. This should point to a property that's unique per enumerable</param>
         /// <returns>The compare results</returns>
-        public static IEnumerableCompareResults<T> CompareEnumerables<T, TKey>(IEnumerable<T> oldList, IEnumerable<T> newList, Func<T, TKey> selector)
+        public static IEnumerableCompareResults<T> CompareEnumerables<T, TKey>(IEnumerable<T> data, IEnumerable<T> desiredData, Func<T, TKey> selector)
         {
-            var addedItems = newList.Where(newItem => !oldList.Any(oldItem => AreEqual(selector(newItem), selector(oldItem)))).ToList();
-            var removedItems = oldList.Where(oldItem => !newList.Any(newItem => AreEqual(selector(oldItem), selector(newItem)))).ToList();
+            ArgumentNullException.ThrowIfNull(selector);
 
-            var updatedItems = new List<IEnumerableCompareItemResult<T>>();
+            var equalizer = new Func<TKey, TKey, bool>((a, b) => AreEqual(a, b));
+            var eq = EqualityComparerFactory.Create<T>((t) => selector(t).GetHashCode(), (a, b) => equalizer(selector(a), selector(b)));
 
-            foreach (var oldItem in oldList)
-            {
-                var oldItemSelector = selector(oldItem);
+            var addedItems = desiredData.Except(data, eq).ToList();
+            var removedItems = data.Except(desiredData, eq).ToList();
+            var updatedItems = desiredData.Join(data, t => t, t => t, (newItem, oldItem) => new IEnumerableCompareItemResult<T>(oldItem, newItem), eq).ToList();
 
-                var found = newList.FirstOrDefault(newItem => AreEqual(oldItemSelector, selector(newItem)));
-                if (found != null)
-                {
-                    updatedItems.Add(new IEnumerableCompareItemResult<T>(oldItem, found));
-                }
-            }
             return new IEnumerableCompareResults<T>(addedItems, removedItems, updatedItems);
         }
 

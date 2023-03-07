@@ -15,8 +15,8 @@ namespace DeveCoolLib
         /// <param name="equals">The equals delegate.</param>
         /// <returns>An instance of <see cref="IEqualityComparer{T}" />.</returns>
         public static IEqualityComparer<T> Create<T>(
-            Func<T?, int> getHashCode,
-            Func<T?, T?, bool> equals)
+            Func<T, int> getHashCode,
+            Func<T, T, bool> equals)
         {
             if (getHashCode == null)
             {
@@ -33,18 +33,18 @@ namespace DeveCoolLib
 
         private class Comparer<T> : IEqualityComparer<T>
         {
-            private readonly Func<T?, int> _getHashCode;
-            private readonly Func<T?, T?, bool> _equals;
+            private readonly Func<T, int> _getHashCode;
+            private readonly Func<T, T, bool> _equals;
 
-            public Comparer(Func<T?, int> getHashCode, Func<T?, T?, bool> equals)
+            public Comparer(Func<T, int> getHashCode, Func<T, T, bool> equals)
             {
                 _getHashCode = getHashCode;
                 _equals = equals;
             }
 
-            public bool Equals(T? x, T? y) => _equals(x, y);
+            public bool Equals(T x, T y) => _equals(x, y);
 
-            public int GetHashCode(T? obj) => _getHashCode(obj);
+            public int GetHashCode(T obj) => _getHashCode(obj);
         }
     }
 }
