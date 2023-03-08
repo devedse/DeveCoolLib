@@ -2,8 +2,8 @@
 {
     public class IEnumerableCompareItemResult<T>
     {
-        public T Old { get; set; }
-        public T New { get; set; }
+        public T Old { get; }
+        public T New { get; }
 
         public IEnumerableCompareItemResult(T oldItem, T newItem)
         {
