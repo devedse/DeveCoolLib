@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DeveCoolLib
+namespace DeveCoolLib.Collections
 {
     /// <summary>
     /// Utility class for creating <see cref="IEqualityComparer{T}"/> instances 
