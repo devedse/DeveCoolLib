@@ -124,15 +124,15 @@ jobs:
       shell: pwsh
   
 
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: DeveCoolLib7z
         path: ./Scripts/Output/DeveCoolLib.7z
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: DeveCoolLibZip
         path: ./Scripts/Output/DeveCoolLib.zip
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: DeveCoolLibNuGet
         path: |
