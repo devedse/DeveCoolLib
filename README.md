@@ -7,12 +7,6 @@ The goal of this project is to be able to save the state of a code line and skip
 |:--------------------:|
 | [![GitHubActions Builds](https://github.com/devedse/DeveCoolLib/workflows/GitHubActionsBuilds/badge.svg)](https://github.com/devedse/DeveCoolLib/actions/workflows/githubactionsbuilds.yml) |
 
-## Intellicode
-
-|  Github Actions (Intellicode) |
-|:-----------------------------:|
-| [![GitHubActions Builds](https://github.com/devedse/DeveCoolLib/workflows/GitHubActionsBuilds/badge.svg)](https://github.com/devedse/DeveCoolLib/actions?query=GitHubActionsBuilds) |
-
 ## DockerHub
 
 | Docker Hub |

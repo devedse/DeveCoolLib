@@ -15,22 +15,6 @@ jobs:
       with:
         token: ${{secrets.github_token}}
 
-  intellicode:
-    needs: generate_version_number
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0 # We need to fetch the entire Git history in order to verify the authenticity.
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 7.0.x
-    - name: Build with dotnet
-      run: dotnet build DeveCoolLib.sln -c Release /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}} # Project needs to build before training a model.
-    - name: Train Intellicode Model
-      uses: microsoft/vs-intellicode@v1
-
   build_docker:
     needs: generate_version_number
     runs-on: ubuntu-latest
