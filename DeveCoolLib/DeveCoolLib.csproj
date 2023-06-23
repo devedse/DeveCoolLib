@@ -4,7 +4,6 @@
 		<TargetFrameworks>net7.0</TargetFrameworks>
 		<AssemblyName>DeveCoolLib</AssemblyName>
 		<PackageId>DeveCoolLib</PackageId>
-		<Version>1.0.0.0</Version>
 		<Title>DeveCoolLib</Title>
 		<Authors>Devedse</Authors>
 		<Description>This is a library used in some of Devedse's projects. It contains helpers and other code stuff to build applications.</Description>
