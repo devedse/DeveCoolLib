@@ -56,11 +56,11 @@ jobs:
         echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
 
         if [[ "${{ github.ref }}" == 'refs/heads/master' ]]; then
-          echo "TAGS=-t devedse/devecoollib.consoleapp:${VERSION} -t devedse/devecoollib.consoleapp:latest" >> $GITHUB_OUTPUT
+          echo "TAGS=-t devedse/devecoollibconsoleapp:${VERSION} -t devedse/devecoollib.consoleapp:latest" >> $GITHUB_OUTPUT
         elif [[ "${{ github.actor }}" == 'dependabot[bot]' ]]; then
-          echo "TAGS=-t devedse/devecoollib.consoleapp:beta_${BRANCH_NAME}" >> $GITHUB_OUTPUT
+          echo "TAGS=-t devedse/devecoollibconsoleapp:beta_${BRANCH_NAME}" >> $GITHUB_OUTPUT
         else 
-          echo "TAGS=-t devedse/devecoollib.consoleapp:beta_${BRANCH_NAME} -t devedse/devecoollib.consoleapp:beta_nightly" >> $GITHUB_OUTPUT
+          echo "TAGS=-t devedse/devecoollibconsoleapp:beta_${BRANCH_NAME} -t devedse/devecoollib.consoleapp:beta_nightly" >> $GITHUB_OUTPUT
         fi
     - name: Run Buildx
       run: |
