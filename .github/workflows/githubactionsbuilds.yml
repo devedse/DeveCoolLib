@@ -184,6 +184,8 @@ jobs:
 
 
   release_nuget:
+    permissions:
+      contents: write
     needs: [generate_version_number, build_windows, build_linux, build_docker, release_github]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
