@@ -22,7 +22,7 @@ namespace DeveCoolLib.Tests.TextFormatting
             var result = TableToTextPrinter.TableToText(data);
 
             //Assert
-            var expected = $@"|   | First Name |   Last Name   |{Environment.NewLine}----------------------------------{Environment.NewLine}| 1 |   Heinz    | Dovenschmirtz |{Environment.NewLine}| 2 |   Mickey   |     Mouse     |{Environment.NewLine}";
+            var expected = $@"|   | First Name |   Last Name   |{Environment.NewLine}| - | ---------- | ------------- |{Environment.NewLine}| 1 |   Heinz    | Dovenschmirtz |{Environment.NewLine}| 2 |   Mickey   |     Mouse     |{Environment.NewLine}";
             Assert.Equal(expected, result);
         }
 
@@ -57,7 +57,7 @@ namespace DeveCoolLib.Tests.TextFormatting
             var result = TableToTextPrinter.TableToText(data);
 
             //Assert
-            var expected = $@"|   | First Name |   Last Name   |{Environment.NewLine}----------------------------------{Environment.NewLine}| 1 |   Heinz    | Dovenschmirtz |{Environment.NewLine}----------------------------------{Environment.NewLine}";
+            var expected = $@"|   | First Name |   Last Name   |{Environment.NewLine}| - | ---------- | ------------- |{Environment.NewLine}| 1 |   Heinz    | Dovenschmirtz |{Environment.NewLine}| - | ---------- | ------------- |{Environment.NewLine}";
             Assert.Equal(expected, result);
         }
 
@@ -75,7 +75,7 @@ namespace DeveCoolLib.Tests.TextFormatting
             var result = TableToTextPrinter.TableToText(data);
 
             //Assert
-            var expected = $@"|   | First Name |   Last Name   |{Environment.NewLine}|                                |{Environment.NewLine}| 1 |   Heinz    | Dovenschmirtz |{Environment.NewLine}----------------------------------{Environment.NewLine}";
+            var expected = $@"|   | First Name |   Last Name   |{Environment.NewLine}|                                |{Environment.NewLine}| 1 |   Heinz    | Dovenschmirtz |{Environment.NewLine}| - | ---------- | ------------- |{Environment.NewLine}";
             Assert.Equal(expected, result);
         }
 
@@ -92,7 +92,7 @@ namespace DeveCoolLib.Tests.TextFormatting
             var result = TableToTextPrinter.TableToText(data);
 
             //Assert
-            var expected = $@"|   | First Name |   Last Name   |{Environment.NewLine}| 1 |            | Dovenschmirtz |{Environment.NewLine}----------------------------------{Environment.NewLine}";
+            var expected = $@"|   | First Name |   Last Name   |{Environment.NewLine}| 1 |            | Dovenschmirtz |{Environment.NewLine}| - | ---------- | ------------- |{Environment.NewLine}";
             Assert.Equal(expected, result);
         }
     }

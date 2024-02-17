@@ -75,12 +75,18 @@ namespace DeveCoolLib.TextFormatting
                         }
                     }
 
-                    sb.Append("|");
-                    sb.AppendLine();
+                    sb.AppendLine("|");
                 }
                 else
                 {
-                    sb.AppendLine(string.Empty.PadRight(totalTableWidth, '-'));
+                    for (var columnNumber = 0; columnNumber < longestColumns; columnNumber++)
+                    {
+                        // | -- | ----- | -------- |
+                        sb.Append("| ");
+                        sb.Append(string.Empty.PadRight(longestPerColumn[columnNumber], '-'));
+                        sb.Append(" ");
+                    }
+                    sb.AppendLine("|");
                 }
             }
 
