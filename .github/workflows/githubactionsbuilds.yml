@@ -186,7 +186,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-
   release_nuget:
     needs: [generate_version_number, build_windows, build_linux, build_docker, release_github]
     runs-on: ubuntu-latest
