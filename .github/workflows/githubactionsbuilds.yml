@@ -188,9 +188,9 @@ jobs:
         name: DeveCoolLib.ConsoleApp.Linux
         path: BuildOutputConsole/*
 
-  build_windows_consoleapp_onlinux:
+  build_windows_consoleapp:
     needs: generate_version_number
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET Core
@@ -218,7 +218,7 @@ jobs:
   release_github:
     permissions:
       contents: write
-    needs: [generate_version_number, build_linux_with_sonarqube, build_linux, build_docker, build_linux_consoleapp, build_windows_consoleapp_onlinux]
+    needs: [generate_version_number, build_linux_with_sonarqube, build_linux, build_docker, build_linux_consoleapp, build_windows_consoleapp]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
@@ -255,7 +255,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release_nuget:
-    needs: [generate_version_number, build_linux_with_sonarqube, build_linux, build_docker, build_linux_consoleapp, build_windows_consoleapp_onlinux, release_github]
+    needs: [generate_version_number, build_linux_with_sonarqube, build_linux, build_docker, build_linux_consoleapp, build_windows_consoleapp, release_github]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
