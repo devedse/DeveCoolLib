@@ -190,7 +190,7 @@ jobs:
 
   build_windows_consoleapp_onlinux:
     needs: generate_version_number
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET Core
