@@ -76,11 +76,11 @@ jobs:
       with:
         dotnet-version: 9.0.x
     - name: dotnet restore
-      run: dotnet restore DeveCoolLib.sln
+      run: dotnet restore DeveCoolLib.slnx
     - name: dotnet build
-      run: dotnet build DeveCoolLib.sln -c Release --no-restore /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
+      run: dotnet build DeveCoolLib.slnx -c Release --no-restore /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
     - name: dotnet test
-      run: dotnet test DeveCoolLib.sln -c Release --no-build --verbosity normal
+      run: dotnet test DeveCoolLib.slnx -c Release --no-build --verbosity normal
 
   build_linux_with_sonarqube:
     needs: generate_version_number
@@ -102,14 +102,14 @@ jobs:
         dotnet tool install --global dotnet-sonarscanner
         dotnet tool install --global dotnet-reportgenerator-globaltool
     - name: dotnet restore
-      run: dotnet restore DeveCoolLib.sln
+      run: dotnet restore DeveCoolLib.slnx
     - name: SonarQube begin
       if: github.actor != 'dependabot[bot]'
       run: dotnet-sonarscanner begin /k:"DeveCoolLib" /o:"devedse-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login=${{secrets.SONARQUBETOKEN}} /d:sonar.cs.opencover.reportsPaths=".\DeveCoolLib.Tests\TestResults\*\coverage.opencover.xml" /d:sonar.coverage.exclusions="DeveCoolLib.ConsoleApp/**/*.cs,DeveCoolLib.Tests/**/*.cs"
     - name: dotnet build
-      run: dotnet build DeveCoolLib.sln -c Release --no-restore /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
+      run: dotnet build DeveCoolLib.slnx -c Release --no-restore /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
     - name: dotnet test
-      run: dotnet test DeveCoolLib.sln --verbosity normal --no-build -c Release --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura,opencover
+      run: dotnet test DeveCoolLib.slnx --verbosity normal --no-build -c Release --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura,opencover
     - name: SonarQube end
       if: github.actor != 'dependabot[bot]'
       env:

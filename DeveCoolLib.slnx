@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="DeveCoolLib.ConsoleApp/DeveCoolLib.ConsoleApp.csproj" />
+  <Project Path="DeveCoolLib.Tests/DeveCoolLib.Tests.csproj" />
+  <Project Path="DeveCoolLib/DeveCoolLib.csproj" />
+</Solution>
