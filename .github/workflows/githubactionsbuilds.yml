@@ -8,10 +8,9 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     outputs:
-      build_number: ${{ github.ref == 'refs/heads/master' && steps.buildnumber.outputs.build_number || 1 }}
+      build_number: ${{ steps.buildnumber.outputs.build_number }}
     steps:
     - name: Generate build number
-      if: github.ref == 'refs/heads/master'
       id: buildnumber
       uses: onyxmueller/build-tag-number@v1
       with:
@@ -83,15 +82,15 @@ jobs:
     - name: dotnet test
       run: dotnet test DeveCoolLib.sln -c Release --no-build --verbosity normal
 
-  build_windows:
+  build_linux_with_sonarqube:
     needs: generate_version_number
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Setup .NET Core @ Latest
+    - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 9.0.x     
+        dotnet-version: 9.0.x
     - uses: actions/setup-java@v4
       with:
         distribution: 'zulu'
@@ -105,12 +104,14 @@ jobs:
     - name: dotnet restore
       run: dotnet restore DeveCoolLib.sln
     - name: SonarQube begin
+      if: github.actor != 'dependabot[bot]'
       run: dotnet-sonarscanner begin /k:"DeveCoolLib" /o:"devedse-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login=${{secrets.SONARQUBETOKEN}} /d:sonar.cs.opencover.reportsPaths=".\DeveCoolLib.Tests\TestResults\*\coverage.opencover.xml" /d:sonar.coverage.exclusions="DeveCoolLib.ConsoleApp/**/*.cs,DeveCoolLib.Tests/**/*.cs"
     - name: dotnet build
       run: dotnet build DeveCoolLib.sln -c Release --no-restore /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
     - name: dotnet test
       run: dotnet test DeveCoolLib.sln --verbosity normal --no-build -c Release --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura,opencover
     - name: SonarQube end
+      if: github.actor != 'dependabot[bot]'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: dotnet-sonarscanner end /d:sonar.login=${{secrets.SONARQUBETOKEN}}
@@ -125,9 +126,24 @@ jobs:
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-    - name: Run GoPackage.ps1 script
-      run: .\Scripts\GoPackage.ps1
-      shell: pwsh
+    - name: Package DeveCoolLib
+      run: |
+        # Create output directory
+        mkdir -p Scripts/Output
+        
+        # Remove existing files if they exist
+        rm -f Scripts/Output/DeveCoolLib.7z
+        rm -f Scripts/Output/DeveCoolLib.zip
+        
+        # Package the build output
+        cd DeveCoolLib/bin/Release
+        
+        # Create zip file (excluding .pdb files)
+        zip -r ../../../Scripts/Output/DeveCoolLib.zip . -x "*.pdb"
+        
+        # Create 7z file (excluding .pdb files)
+        7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=1536m -mfb=273 -ms=on -mqs=on -sccUTF-8 "../../../Scripts/Output/DeveCoolLib.7z" . -x!"*.pdb"
+      shell: bash
   
 
     - uses: actions/upload-artifact@v4
@@ -148,7 +164,7 @@ jobs:
   release_github:
     permissions:
       contents: write
-    needs: [generate_version_number, build_windows, build_linux, build_docker]
+    needs: [generate_version_number, build_linux_with_sonarqube, build_linux, build_docker]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
@@ -179,7 +195,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release_nuget:
-    needs: [generate_version_number, build_windows, build_linux, build_docker, release_github]
+    needs: [generate_version_number, build_linux_with_sonarqube, build_linux, build_docker, release_github]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
