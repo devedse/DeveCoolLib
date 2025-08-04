@@ -161,10 +161,64 @@ jobs:
           ./DeveCoolLib/bin/Release/*.nupkg
           ./DeveCoolLib/bin/Release/*.snupkg
 
+  build_linux_consoleapp:
+    needs: generate_version_number
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x
+    - name: Publish Untrimmed
+      run: dotnet publish DeveCoolLib.ConsoleApp/DeveCoolLib.ConsoleApp.csproj -c Release -r linux-x64 -o DeveCoolLib.ConsoleApp/bin/Release/net9.0/linux-x64/publishuntrimmed/ /p:PublishSingleFile=true /p:SelfContained=true /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
+    - name: Publish Trimmed
+      run: dotnet publish DeveCoolLib.ConsoleApp/DeveCoolLib.ConsoleApp.csproj -c Release -r linux-x64 -o DeveCoolLib.ConsoleApp/bin/Release/net9.0/linux-x64/publishtrimmed/ /p:PublishSingleFile=true /p:SelfContained=true /p:PublishTrimmed=true /p:TrimMode=full /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
+    - name: Publish Trimmed AOT
+      run: dotnet publish DeveCoolLib.ConsoleApp/DeveCoolLib.ConsoleApp.csproj -c Release -r linux-x64 -o DeveCoolLib.ConsoleApp/bin/Release/net9.0/linux-x64/publishtrimmedaot/ /p:PublishTrimmed=true /p:TrimMode=full /p:PublishAot=true /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
+    - name: Copy output
+      shell: bash
+      run: |
+        mkdir BuildOutputConsole
+        mv ./DeveCoolLib.ConsoleApp/bin/Release/net9.0/linux-x64/publishuntrimmed/DeveCoolLib.ConsoleApp ./BuildOutputConsole/DeveCoolLib.ConsoleApp.Untrimmed
+        mv ./DeveCoolLib.ConsoleApp/bin/Release/net9.0/linux-x64/publishtrimmed/DeveCoolLib.ConsoleApp ./BuildOutputConsole/DeveCoolLib.ConsoleApp.Trimmed
+        mv ./DeveCoolLib.ConsoleApp/bin/Release/net9.0/linux-x64/publishtrimmedaot/DeveCoolLib.ConsoleApp ./BuildOutputConsole/DeveCoolLib.ConsoleApp.TrimmedAot
+    - uses: actions/upload-artifact@v4
+      with:
+        name: DeveCoolLib.ConsoleApp.Linux
+        path: BuildOutputConsole/*
+
+  build_windows_consoleapp_onlinux:
+    needs: generate_version_number
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x
+    - name: Publish Untrimmed
+      run: dotnet publish DeveCoolLib.ConsoleApp/DeveCoolLib.ConsoleApp.csproj -c Release -r win-x64 -o DeveCoolLib.ConsoleApp/bin/Release/net9.0/win-x64/publishuntrimmed/ /p:PublishSingleFile=true /p:SelfContained=true /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
+    - name: Publish Trimmed
+      run: dotnet publish DeveCoolLib.ConsoleApp/DeveCoolLib.ConsoleApp.csproj -c Release -r win-x64 -o DeveCoolLib.ConsoleApp/bin/Release/net9.0/win-x64/publishtrimmed/ /p:PublishSingleFile=true /p:SelfContained=true /p:PublishTrimmed=true /p:TrimMode=full /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
+    - name: Publish Trimmed AOT
+      run: dotnet publish DeveCoolLib.ConsoleApp/DeveCoolLib.ConsoleApp.csproj -c Release -r win-x64 -o DeveCoolLib.ConsoleApp/bin/Release/net9.0/win-x64/publishtrimmedaot/ /p:PublishTrimmed=true /p:TrimMode=full /p:PublishAot=true /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
+    - name: Copy output
+      shell: bash
+      run: |
+        mkdir BuildOutputConsole
+        mv ./DeveCoolLib.ConsoleApp/bin/Release/net9.0/win-x64/publishuntrimmed/DeveCoolLib.ConsoleApp.exe ./BuildOutputConsole/DeveCoolLib.ConsoleApp.Untrimmed.exe
+        mv ./DeveCoolLib.ConsoleApp/bin/Release/net9.0/win-x64/publishtrimmed/DeveCoolLib.ConsoleApp.exe ./BuildOutputConsole/DeveCoolLib.ConsoleApp.Trimmed.exe
+        mv ./DeveCoolLib.ConsoleApp/bin/Release/net9.0/win-x64/publishtrimmedaot/DeveCoolLib.ConsoleApp.exe ./BuildOutputConsole/DeveCoolLib.ConsoleApp.TrimmedAot.exe
+    - uses: actions/upload-artifact@v4
+      with:
+        name: DeveCoolLib.ConsoleApp.Windows
+        path: BuildOutputConsole/*
+
   release_github:
     permissions:
       contents: write
-    needs: [generate_version_number, build_linux_with_sonarqube, build_linux, build_docker]
+    needs: [generate_version_number, build_linux_with_sonarqube, build_linux, build_docker, build_linux_consoleapp, build_windows_consoleapp_onlinux]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
@@ -189,13 +243,19 @@ jobs:
           ./artifacts/DeveCoolLibZip/DeveCoolLib.zip
           ./artifacts/DeveCoolLibNuGet/*.nupkg
           ./artifacts/DeveCoolLibNuGet/*.snupkg
+          ./artifacts/DeveCoolLib.ConsoleApp.Linux/DeveCoolLib.ConsoleApp.Untrimmed
+          ./artifacts/DeveCoolLib.ConsoleApp.Linux/DeveCoolLib.ConsoleApp.Trimmed
+          ./artifacts/DeveCoolLib.ConsoleApp.Linux/DeveCoolLib.ConsoleApp.TrimmedAot
+          ./artifacts/DeveCoolLib.ConsoleApp.Windows/DeveCoolLib.ConsoleApp.Untrimmed.exe
+          ./artifacts/DeveCoolLib.ConsoleApp.Windows/DeveCoolLib.ConsoleApp.Trimmed.exe
+          ./artifacts/DeveCoolLib.ConsoleApp.Windows/DeveCoolLib.ConsoleApp.TrimmedAot.exe
         fail_on_unmatched_files: true
         make_latest: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release_nuget:
-    needs: [generate_version_number, build_linux_with_sonarqube, build_linux, build_docker, release_github]
+    needs: [generate_version_number, build_linux_with_sonarqube, build_linux, build_docker, build_linux_consoleapp, build_windows_consoleapp, release_github]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
