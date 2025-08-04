@@ -255,7 +255,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release_nuget:
-    needs: [generate_version_number, build_linux_with_sonarqube, build_linux, build_docker, build_linux_consoleapp, build_windows_consoleapp, release_github]
+    needs: [generate_version_number, build_linux_with_sonarqube, build_linux, build_docker, build_linux_consoleapp, build_windows_consoleapp_onlinux, release_github]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
