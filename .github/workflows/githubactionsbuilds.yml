@@ -22,6 +22,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Login to Docker Hub
+      if: github.actor != 'dependabot[bot]'
       uses: docker/login-action@v3
       with:
         username: devedse
@@ -63,7 +64,7 @@ jobs:
         fi
     - name: Run Buildx
       run: |
-        docker buildx build -f DeveCoolLib.ConsoleApp/Dockerfile --build-arg BUILD_VERSION=${{steps.tags.outputs.version}} --platform linux/arm64,linux/amd64 ${{steps.tags.outputs.tags}} ${{ (github.event_name != 'pull_request' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && '--push' || '' }} .
+        docker buildx build -f DeveCoolLib.ConsoleApp/Dockerfile --build-arg BUILD_VERSION=${{steps.tags.outputs.version}} --platform linux/arm64,linux/amd64 ${{steps.tags.outputs.tags}} ${{ github.actor != 'dependabot[bot]' && (github.event_name != 'pull_request' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && '--push' || '' }} .
 
   
   build_linux:
@@ -74,7 +75,9 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 9.0.x
+        dotnet-version: |
+          8.0.x
+          10.0.x
     - name: dotnet restore
       run: dotnet restore DeveCoolLib.slnx
     - name: dotnet build
@@ -90,7 +93,9 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 9.0.x
+        dotnet-version: |
+          8.0.x
+          10.0.x
     - uses: actions/setup-java@v4
       with:
         distribution: 'zulu'
@@ -118,6 +123,7 @@ jobs:
     - name: Pack
       run: dotnet pack DeveCoolLib/DeveCoolLib.csproj --verbosity normal --no-build -c Release /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
     - name: Run CodeCov
+      if: github.actor != 'dependabot[bot]'
       uses: codecov/codecov-action@v4
       with:
         directory: ./DeveCoolLib.Tests/TestResults
@@ -169,20 +175,20 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 9.0.x
+        dotnet-version: 10.0.x
     - name: Publish Untrimmed
-      run: dotnet publish DeveCoolLib.ConsoleApp/DeveCoolLib.ConsoleApp.csproj -c Release -r linux-x64 -o DeveCoolLib.ConsoleApp/bin/Release/net9.0/linux-x64/publishuntrimmed/ /p:PublishSingleFile=true /p:SelfContained=true /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
+      run: dotnet publish DeveCoolLib.ConsoleApp/DeveCoolLib.ConsoleApp.csproj -c Release -r linux-x64 -o DeveCoolLib.ConsoleApp/bin/Release/net10.0/linux-x64/publishuntrimmed/ /p:PublishSingleFile=true /p:SelfContained=true /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
     - name: Publish Trimmed
-      run: dotnet publish DeveCoolLib.ConsoleApp/DeveCoolLib.ConsoleApp.csproj -c Release -r linux-x64 -o DeveCoolLib.ConsoleApp/bin/Release/net9.0/linux-x64/publishtrimmed/ /p:PublishSingleFile=true /p:SelfContained=true /p:PublishTrimmed=true /p:TrimMode=full /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
+      run: dotnet publish DeveCoolLib.ConsoleApp/DeveCoolLib.ConsoleApp.csproj -c Release -r linux-x64 -o DeveCoolLib.ConsoleApp/bin/Release/net10.0/linux-x64/publishtrimmed/ /p:PublishSingleFile=true /p:SelfContained=true /p:PublishTrimmed=true /p:TrimMode=full /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
     - name: Publish Trimmed AOT
-      run: dotnet publish DeveCoolLib.ConsoleApp/DeveCoolLib.ConsoleApp.csproj -c Release -r linux-x64 -o DeveCoolLib.ConsoleApp/bin/Release/net9.0/linux-x64/publishtrimmedaot/ /p:PublishTrimmed=true /p:TrimMode=full /p:PublishAot=true /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
+      run: dotnet publish DeveCoolLib.ConsoleApp/DeveCoolLib.ConsoleApp.csproj -c Release -r linux-x64 -o DeveCoolLib.ConsoleApp/bin/Release/net10.0/linux-x64/publishtrimmedaot/ /p:PublishTrimmed=true /p:TrimMode=full /p:PublishAot=true /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
     - name: Copy output
       shell: bash
       run: |
         mkdir BuildOutputConsole
-        mv ./DeveCoolLib.ConsoleApp/bin/Release/net9.0/linux-x64/publishuntrimmed/DeveCoolLib.ConsoleApp ./BuildOutputConsole/DeveCoolLib.ConsoleApp.Untrimmed
-        mv ./DeveCoolLib.ConsoleApp/bin/Release/net9.0/linux-x64/publishtrimmed/DeveCoolLib.ConsoleApp ./BuildOutputConsole/DeveCoolLib.ConsoleApp.Trimmed
-        mv ./DeveCoolLib.ConsoleApp/bin/Release/net9.0/linux-x64/publishtrimmedaot/DeveCoolLib.ConsoleApp ./BuildOutputConsole/DeveCoolLib.ConsoleApp.TrimmedAot
+        mv ./DeveCoolLib.ConsoleApp/bin/Release/net10.0/linux-x64/publishuntrimmed/DeveCoolLib.ConsoleApp ./BuildOutputConsole/DeveCoolLib.ConsoleApp.Untrimmed
+        mv ./DeveCoolLib.ConsoleApp/bin/Release/net10.0/linux-x64/publishtrimmed/DeveCoolLib.ConsoleApp ./BuildOutputConsole/DeveCoolLib.ConsoleApp.Trimmed
+        mv ./DeveCoolLib.ConsoleApp/bin/Release/net10.0/linux-x64/publishtrimmedaot/DeveCoolLib.ConsoleApp ./BuildOutputConsole/DeveCoolLib.ConsoleApp.TrimmedAot
     - uses: actions/upload-artifact@v4
       with:
         name: DeveCoolLib.ConsoleApp.Linux
@@ -196,20 +202,20 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 9.0.x
+        dotnet-version: 10.0.x
     - name: Publish Untrimmed
-      run: dotnet publish DeveCoolLib.ConsoleApp/DeveCoolLib.ConsoleApp.csproj -c Release -r win-x64 -o DeveCoolLib.ConsoleApp/bin/Release/net9.0/win-x64/publishuntrimmed/ /p:PublishSingleFile=true /p:SelfContained=true /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
+      run: dotnet publish DeveCoolLib.ConsoleApp/DeveCoolLib.ConsoleApp.csproj -c Release -r win-x64 -o DeveCoolLib.ConsoleApp/bin/Release/net10.0/win-x64/publishuntrimmed/ /p:PublishSingleFile=true /p:SelfContained=true /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
     - name: Publish Trimmed
-      run: dotnet publish DeveCoolLib.ConsoleApp/DeveCoolLib.ConsoleApp.csproj -c Release -r win-x64 -o DeveCoolLib.ConsoleApp/bin/Release/net9.0/win-x64/publishtrimmed/ /p:PublishSingleFile=true /p:SelfContained=true /p:PublishTrimmed=true /p:TrimMode=full /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
+      run: dotnet publish DeveCoolLib.ConsoleApp/DeveCoolLib.ConsoleApp.csproj -c Release -r win-x64 -o DeveCoolLib.ConsoleApp/bin/Release/net10.0/win-x64/publishtrimmed/ /p:PublishSingleFile=true /p:SelfContained=true /p:PublishTrimmed=true /p:TrimMode=full /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
     - name: Publish Trimmed AOT
-      run: dotnet publish DeveCoolLib.ConsoleApp/DeveCoolLib.ConsoleApp.csproj -c Release -r win-x64 -o DeveCoolLib.ConsoleApp/bin/Release/net9.0/win-x64/publishtrimmedaot/ /p:PublishTrimmed=true /p:TrimMode=full /p:PublishAot=true /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
+      run: dotnet publish DeveCoolLib.ConsoleApp/DeveCoolLib.ConsoleApp.csproj -c Release -r win-x64 -o DeveCoolLib.ConsoleApp/bin/Release/net10.0/win-x64/publishtrimmedaot/ /p:PublishTrimmed=true /p:TrimMode=full /p:PublishAot=true /p:Version=1.0.${{needs.generate_version_number.outputs.build_number}}
     - name: Copy output
       shell: bash
       run: |
         mkdir BuildOutputConsole
-        mv ./DeveCoolLib.ConsoleApp/bin/Release/net9.0/win-x64/publishuntrimmed/DeveCoolLib.ConsoleApp.exe ./BuildOutputConsole/DeveCoolLib.ConsoleApp.Untrimmed.exe
-        mv ./DeveCoolLib.ConsoleApp/bin/Release/net9.0/win-x64/publishtrimmed/DeveCoolLib.ConsoleApp.exe ./BuildOutputConsole/DeveCoolLib.ConsoleApp.Trimmed.exe
-        mv ./DeveCoolLib.ConsoleApp/bin/Release/net9.0/win-x64/publishtrimmedaot/DeveCoolLib.ConsoleApp.exe ./BuildOutputConsole/DeveCoolLib.ConsoleApp.TrimmedAot.exe
+        mv ./DeveCoolLib.ConsoleApp/bin/Release/net10.0/win-x64/publishuntrimmed/DeveCoolLib.ConsoleApp.exe ./BuildOutputConsole/DeveCoolLib.ConsoleApp.Untrimmed.exe
+        mv ./DeveCoolLib.ConsoleApp/bin/Release/net10.0/win-x64/publishtrimmed/DeveCoolLib.ConsoleApp.exe ./BuildOutputConsole/DeveCoolLib.ConsoleApp.Trimmed.exe
+        mv ./DeveCoolLib.ConsoleApp/bin/Release/net10.0/win-x64/publishtrimmedaot/DeveCoolLib.ConsoleApp.exe ./BuildOutputConsole/DeveCoolLib.ConsoleApp.TrimmedAot.exe
     - uses: actions/upload-artifact@v4
       with:
         name: DeveCoolLib.ConsoleApp.Windows
