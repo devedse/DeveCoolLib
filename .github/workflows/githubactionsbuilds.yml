@@ -3,12 +3,6 @@ name: GitHubActionsBuilds
 on:
   push:
   workflow_dispatch:
-    inputs:
-      use_cache:
-        description: 'Use Docker build cache'
-        required: false
-        default: true
-        type: boolean
 
 jobs:
   generate_version_number:
@@ -79,8 +73,6 @@ jobs:
         annotations: ${{ steps.meta.outputs.annotations }}
         build-args: |
           BUILD_VERSION=1.0.${{needs.generate_version_number.outputs.build_number}}
-        # cache-from: ${{ (github.event_name != 'workflow_dispatch' || inputs.use_cache) && 'type=gha' || '' }}
-        # cache-to: ${{ (github.event_name != 'workflow_dispatch' || inputs.use_cache) && 'type=gha,mode=max' || '' }}
         github-token: ${{ secrets.GITHUB_TOKEN }}
         provenance: false
         sbom: false
